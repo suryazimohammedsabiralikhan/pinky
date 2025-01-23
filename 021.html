@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PINKY AI CHAT BOT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9fbf9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .chat-container {
+            width: 400px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .chat-header {
+            background-color: #fffb00;
+            color: #000000;
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .chat-body {
+            padding: 20px;
+            height: 300px;
+            overflow-y: auto;
+        }
+
+        .chat-input {
+            display: flex;
+            border-top: 1px solid #ddd;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+        }
+
+        .chat-input button {
+            padding: 10px;
+            background-color: #3a8ae0;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .chat-input button:hover {
+            background-color: #83d846;
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            animation: popIn 0.5s ease-in-out;
+        }
+
+        .message.user {
+            background-color: #4e96e3;
+            color: #fff;
+            text-align: right;
+        }
+
+        .message.bot {
+            background-color: #64f900;
+            color: #333;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        h2{
+            text-align: center;
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="chat-container">
+        <div class="chat-header">PINKY AI</div>
+        <div class="chat-header" color="red">ASK ABOUT AI&ML FRESHERS PARTY</div>
+        <div class="chat-body" id="chatBody"></div>
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Ask PINKY About AIML Freshers Day.....">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const responses = {
+            "where is venue": "At the Nuzvid Polytechnic College.",
+            "where":"At Nuzvid Polytechnic College.",
+            "when":"On 27th Jan Evening 4PM.",
+            "where is the venue":"At Nuzvid Polytechnic College.",
+            "when is the party":"On 27th Jan Evening 4PM.",
+            "what special in party":"We have so many special events in our party. We have Dance, Singing, Games, and so many other events. I hope you must enjoy this party.",
+            "what is the special in party":"We have so many special events in our party. We have Dance, Singing, Games, and so many other events. I hope you must enjoy this party.",
+            "what is the special in party pinky":"We have so many special events in our party. We have Dance, Singing, and so many other events. I hope you must enjoy this party.",
+            "pinky what is the special in party":"We have so many special events in our party. We have Dance, Singing, and so many other events. I hope you must enjoy this party.",
+            "which subjects are conducting the party":"Our AIML 3rd Years and 2nd Years are conducting the party.",
+            "which subjects are conducting the party pinky":"Our AIML 3rd Years and 2nd Years are conducting the party.",
+            "pinky which subjects are conducting the party":"Our AIML 3rd Years and 2nd Years are conducting the party.",
+            "which subjects are conducting the party":"Our AIML 3rd Years and 2nd Years are conducting the party.",
+            "which subjects are conducting the party pinky":"Our AIML 3rd Years and 2nd Years are conducting the party.",
+            "pinky which subjects are conducting the party":"Our AIML 3rd Years and 2nd Years are conducting the party.",
+            "party guests":"Our College Faculty and Students are the Guests of the Party.",
+            "party guests pinky":"Our College Faculty and Students are the Guests of the Party.",   
+            "pinky party guests":"Our College Faculty and Students are the Guests of the Party.",
+            "who are the guests of the party":"Our College Faculty and Students are the Guests of the Party.",
+            "who are the guests of the party pinky":"Our College Faculty and Students are the Guests of the Party.",
+            "pinky who are the guests of the party":"Our College Faculty and Students are the Guests of the Party.",
+            "what about freshers party":"What do you Want.",
+            "what about freshers party pinky":"What do you Want.",
+            "pinky what about freshers party":"What do you Want.",
+            "hi": "Hi NAGA RANI Madam! Here I am PINKY AI. I am Inviting You AIML Freshers Party of 2K24.",
+            "hai": "Hi NAGA RANI Madam! Here I Am PINKY AI. I am Inviting You AIML Freshers Party of 2K24.",
+            "hi": "Hi NAGA RANI Madam! Here I Am PINKY AI. I am Inviting You AIML Freshers Party of 2K24.",
+            "hii": "Hi NAGA RANI Madam! Here I Am PINKY AI. I am Inviting You AIML Freshers Party of 2K24.",
+            "when is the party": "Our AIML Freshers Party On 27th of January 2025.",
+            "how are you pinky": "Fine Madam.",
+            "hai pinky": "NAGA RANI Madam! Here I am PINKY AI. I am Inviting You AIML Freshers Party of 2K24.",
+            "hii pinky": "Hi NAGA RANI Madam! Here I am PINKY AI. I am Inviting You AIML Freshers Party of 2K24.",
+            "hi pinky" : "Hi NAGA RANI Madam! Here I am PINKY AI. I am Inviting You AIML Freshers Party of 2K24.",
+            "when is the aiml party": "This Year January 27th.",
+            "when is the aiml party pinky": "This Year January 27th.",
+            "pinky when is the aiml party": "This Year January 27th.",
+            "how r u pinky" : "I am Fine Thanks for asking. I hope you also fine. Do you want any Information About the AIMl Freshers Party.",
+            "when is the ai&ml party": "On 27th Of this Month.",
+            "when is the ai&ml party pinky": "On 27th Of this Month.",
+            "pinky when is the ai&ml party": "On 27th Of this Month.",
+            "what is the time": "On The Same Day Evening 4PM.",
+            "what is the time pinky": "On The Same Day Evening 4PM.",
+            "pinky what is the time": "On The Same Day Evening 4PM.",
+            "time of the time of party": "On The Same Day Evening 4PM.",
+            "time of the time of party pinky": "On The Same Day Evening 4PM.",
+            "pinky time of the time of party": "On The Same Day Evening 4PM.",
+            "time of party": "On The Same Day Evening 4PM.",
+            "time of party pinky": "On The Same Day Evening 4PM.",
+            "pinky time of party": "On The Same Day Evening 4PM.",
+            "location": "Nuzvid Polytechnic College.",
+            "location pinky": "Nuzvid Polytechnic College.",
+            "pinky location": "Nuzvid Polytechnic College.",
+            "what is the location": "Nuzvid Polytechnic College.",
+            "what is the location pinky": "Nuzvid Polytechnic College.",
+            "pinky what is the location": "Nuzvid Polytechnic College.",
+            "what is the location of the party": "At Nuzvid Polytechnic College.",
+            "what is the location of the party pinky": "At Nuzvid Polytechnic College.",
+            "pinky what is the location of the party": "At Nuzvid Polytechnic College.",
+            "ok": "Thanks. I hope You must Atend to this Party on 27th Of This Month.",
+            "ok pinky": "Thanks. I hope You must Atend to this Party on 27th Of This Month.",
+            "pinky ok": "Thanks. I hope You must Atend to this Party on 27th Of This Month.",
+            "where is the location of the party": "At The Nuzvid Polytechnic College.",
+            "where is the location of the party pinky": "At The Nuzvid Polytechnic College.",
+            "pinky where is the location of the party": "At The Nuzvid Polytechnic College.",
+            "can you please tell me the party location": "Yes Madam, At the Nuzvid Polytechnic College.",
+            "can you please tell me the party location pinky": "Yes Madam, At the Nuzvid Polytechnic College.",
+            "pinky can you please tell me the party location": "Yes Madam, At the Nuzvid Polytechnic College.",
+            "hlo": "Yes I am Here to Assitate you on the AIML Freshers Party.",
+            "hlo pinky": "Yes I am Here to Assitate you on the AIML Freshers Party.",
+            "pinky hlo": "Yes I am Here to Assitate you on the AIML Freshers Party.",
+            "hello": "Yes I am Here to Assitate you on the AIML Freshers Party.",
+            "hello pinky": "Yes I am Here to Assitate you on the AIML Freshers Party.",
+            "hello ": "Yes I am Here to Assitate you on the AIML Freshers Party.",
+            "pinky hello": "Yes I am Here to Assitate you on the AIML Freshers Party.",
+            "do you know who am i": "Yes I Know Who are you. You are the general staff. Yours Name is NAGA RANI Madam.",
+            "pinky do you know who am i": "Yes I Know Who are you. You are the HOD of AIML Dept. Yours Name is NAGA RANI Madam.",
+            "do you who am i pinky": "Yes I Know Who are you. You are the HOD of AIML Dept. Yours Name is NAGA RANI Madam.",
+            "pinky what is my name": "Yours Name is NAGA RANI Madam.",
+            "what is my name pinky": "Yours Name is NAGA RANI Madam.",
+            "what is my name": "Yours Name is NAGA RANI Madam.",
+            "my name pinky": "Yours Name is NAGA RANI Madam.",
+            "pinky my name": "Yours Name is NAGA RANI Madam.",
+            "what is time of party": "Evening 4PM.",
+            "ok bye pinky": "Ha Bye Madam. I hope you must attend to this Party-Thanks. Have a Nice Day Madam",
+            "bye": "Ha Bye Madam. I hope you must attend to this Party-Thanks. Have a Nice Day Madam",
+            "ok bye": "Ha Bye Madam. I hope you must attend to this Party-Thanks. Have a Nice Day Madam",
+            "pinky bye": "Ha Bye Madam. I hope you must attend to this Party-Thanks. Have a Nice Day Madam",
+            "ok bye pinky": "Ha Bye Madam. I hope you must attend to this Party-Thanks. Have a Nice Day Madam",
+            "bye pinky": "Ha Bye Madam. I hope you must attend to this Party-Thanks. Have a Nice Day Madam",
+            "time pinky": "4PM.",
+            "can you please tell me what is your name": "My Name is PINKY.",
+            "who are you": "I am AI. My name is PINKY. I am developed For the AIML Party Only.",
+            "who are you pinky": "I am AI. My name is PINKY. I am developed For the AIML Party Only.",
+            "pinky who are you": "I am AI. My name is PINKY. I am developed For the AIML Party Only.",
+            "what is your name": "My name Is PINKY. I am AI that is Help you to ASsitate On the Occucation of the AIML Freshers Party.",
+            "who are you pinky": "I am AI. Thats I help you to Assitate you on the Occucation of the AIML Freshers Party. Thats My Job.",
+            "can you please tell the time of the party pinky" : "Yes I can say you Time of the Party is Evening 4PM.",
+            "pinky can you please tell the time of the party pinky" : "Yes I can say you Time of the Party is Evening 4PM.",
+            "pinky time": "4PM.",
+            "time": "4PM.",
+            "what is the date of party": "On the January 27th of 2025.",
+            "what is the date of the party": "On the January 27th of 2025.",
+            "what is the date of the party pinky": "On the January 27th of 2025.",
+            "pinky what is the date of the party pinky": "On the January 27th of 2025.",
+            "what is the date of party pinky": "On the January 27th of 2025.",
+            "pinky what is the date of party": "On the January 27th of 2025.",
+            "pinky what is the date of party": "On the January 27th of 2025.",
+            "date of the party pinky": "On the January 27th of 2025.",
+            "pinky date of the party": "On the January 27th of 2025.", 
+            "can you please tell me when is the party" : "January 27th.",
+            "pinky can you please tell me when is the party" : "January 27th.",
+            "can you please tell me when is the party pinky" : "January 27th.",
+            "pinky can you please tell me when is the party pinky" : "January 27th.",
+            "when is the party":"27th of January.",
+            "when is the party pinky": "on the 27th of This Month.",
+            "pinky when is the party": "on the 27th of This Month.",
+            "time of the party": "4PM of Janunary 27th.",
+            "time of the party pinky": "4PM of Janunary 27th.",
+            "pinky time of the party": "4PM of Janunary 27th.",
+            "date of party": "27th Of January.",
+            "can you please tell me the time of the party": "On the January 27th Evening 4PM.",
+            "can you tell me what is time of the party": "On the 27th Evening 4PM.",
+            "pinky when is the party start": "On the 27th Evening 4PM.",
+            "when is the  aiml freshers party pinky": "Our AIML Freshers Party On the 27th of January.",
+            "pinky when is the  aiml freshers party": "Our AIML Freshers Party On the 27th of January.",
+            "when is the  aiml freshers party": "Our AIML Freshers Party On the 27th of January.",
+            "where is the aiml freshers party":"Our AIML frshers Party at the Nuzvid Polytechnic College",
+            "where is the aiml freshers party pinky":"Our AIML frshers Party at the Nuzvid Polytechnic College.",
+            "pinky where is the aiml freshers party":"Our AIML frshers Party at the Nuzvid Polytechnic College",
+            "party start time": "Evening 4PM",
+            "date of party pinky": "27th Of January.",
+            "pinky date of party": "27th Of January.",
+            "can you tell me what is the date": "27th Of January.",
+            "can you please tell me what is the date": "27th Of January.",
+            "can you please tell me what is the date of the party": "27th Of January.",
+            "can you please tell me what is the party date": "27th Of January.",
+            "can you please tell me date of the party": "27th Of January.",
+            "pinky can you tell me what is the date": "27th Of January.",
+            "can you tell me what is the date pinky": "27th Of January.",
+            "pinky can you tell me what is the date": "27th Of January.",
+            "pinky can you tell me what is the date pinky": "27th Of January.",
+            "can you please tell me what is the date": "27th Of January.",
+            "pinky can you please tell me what is the date": "27th Of January.",
+            "can you please tell me what is the date pinky": "27th Of January.",
+            "can you please tell me what is the date of the party pinky": "27th Of January.",
+            "pinky can you please tell me what is the date of the party": "27th Of January.",
+            "can you please tell me what is the date of the party pinky": "27th Of January.",
+            "can you please tell me what is the party date": "27th Of January.",
+            "pinky can you please tell me what is the party date": "27th Of January.",
+            "can you please tell me what is the party date pinky": "27th Of January.",
+            "can you please tell me date of the party": "27th Of January.",
+            "pinky can you please tell me date of the party": "27th Of January.",
+            "can you please tell me date of the party pinky": "27th Of January.",
+            "date of the party": "27th Of January.",
+            "pinky date of the party": "27th Of January.",
+            "date of the party pinky": "27th Of January.",
+            "how are you": "I am Fine Thanks for asking. I hope you also fine. Do you want any Information About the AIMl Freshers Party.",
+            "how are you pinky": "I am Fine Thanks for asking. I hope you also fine. Do you want any Information About the AIMl Freshers Party.",
+            "pinky how are you": "I am Fine Thanks for asking. I hope you also fine. Do you want any Information About the AIMl Freshers Party.",
+            "how r u": "Yes I am Fine. Do you want any Information About the AIML Freshers Party.",
+            "how r u pinky": "Yes I am Fine. Do you want any Information About the AIML Freshers Party.",
+            "pinky how r u": "Yes I am Fine. Do you want any Information About the AIML Freshers Party.",
+            "date of the party": "27th Of January.",
+            "party date": "On The 27th Of January AIML Freshers Party.",
+            "party date pinky": "On The 27th Of January AIML Freshers Party.",
+            "pinky party date": "On The 27th Of January AIML Freshers Party.",
+            "when did the party": "On The 27th Of January AIML Freshers Party.",
+            "when did the party pinky": "On The 27th Of January AIML Freshers Party.",
+            "pinky when did the party": "On The 27th Of January AIML Freshers Party.",
+            "where was the party": "On Our Nuzvid Polytechinc College.",
+            "where was the party pinky": "On Our Nuzvid Polytechinc College.",
+            "pinky where was the party": "On Our Nuzvid Polytechinc College.",
+            "who is inviting to the AIML freshers party": "Our 3rd Years and 2nd Years.",
+            "who is inviting to the AIML freshers party pinky": "Our 3rd Years and 2nd Years.",
+            "pinky who is inviting to the AIML freshers party": "Our 3rd Years and 2nd Years.",
+            "When is the AIML Freshers Party": "AI&ML 2024 Freshers Party.",
+            "When is the AIML Freshers Party pinky": "AI&ML 2024 Freshers Party.",
+            "pinky When is the AIML Freshers Party": "AI&ML 2024 Freshers Party.",
+            "what is the date of the freshers party": "27th Of January.",
+            "what is the date of the freshers party pinky": "27th Of January.",
+            "pinky what is the date of the freshers party": "27th Of January.",
+            "Who will be attending the AIML Freshers Party pinky": "You and Our College Faculty.",
+            "pinky Who will be attending the AIML Freshers Partyy": "You and Our College Faculty.",
+            "Who will be attending the AIML Freshers Partyy": "You and Our College Faculty.",
+            "time of the party": "4PM.",
+            "time of the party pinky": "4PM.",
+            "pinky time of the party": "4PM.",
+            "when does the party start": "4PM.",
+            "hey pinky can you please tell me time of the party": "Yes our Party will Start on 4PM.",
+            "pinky can you please tell me time of the party": "Yes our Party will Start on 4PM.",
+            "when does the party start pinky": "4PM.",
+            "pinky when does the party start": "4PM.",
+            "what is the party start pinky": "4PM.",
+            "pinky what is the party start": "4PM.",
+            "what is the party start": "4PM.",
+            "party time pinky": "4PM.",
+            "pinky party time": "4PM.",
+            "party time": "4PM.",
+            "where is the party": "At Nzvid Polytechnic College Ground.",
+            "where is the party pinky": "At Nzvid Polytechnic College Ground.",
+            "pinky where is the party": "At Nzvid Polytechnic College Ground.",
+            "location of the party": "At Nzvid Polytechnic College Ground.",
+            "location of the party pinky": "At Nzvid Polytechnic College Ground.",
+            "pinky location of the party": "At Nzvid Polytechnic College Ground.",
+            "where will the freshers party be held": "At Nzvid Polytechnic College Ground.",
+            "where will the freshers party be held pinky": "At Nzvid Polytechnic College Ground.",
+            "pinky where will the freshers party be held": "At Nzvid Polytechnic College Ground.",
+            "party venue": "At Nzvid Polytechnic College Ground.",
+            "party venue pinky": "At Nzvid Polytechnic College Ground.",
+            "pinky party venue": "At Nzvid Polytechnic College Ground.",
+            "venue of the freshers party": "At Nzvid Polytechnic College Ground.",
+            "venue of the freshers party pinky": "At Nzvid Polytechnic College Ground.",
+            "pinky venue of the freshers party": "At Nzvid Polytechnic College Ground.",
+            "who is organizing the party": "Our AI&ML 3rs Year's and 2nd Years.",
+            "who is organizing the party pinky": "Our AI&ML 3rs Year's and 2nd Years.",
+            "pinky who is organizing the party": "Our AI&ML 3rs Year's and 2nd Years.",
+            "who is hosting the freshers party": "Our AI&ML 3rs Year's and 2nd Years.",
+            "who is hosting the freshers party pinky": "Our AI&ML 3rs Year's and 2nd Years.",
+            "pinky who is hosting the freshers party": "Our AI&ML 3rs Year's and 2nd Years.",
+            "which batch is conducting the paryt": "Our AI&ML 3rs Year's and 2nd Years.",
+            "pinky which batch is conducting the paryt": "Our AI&ML 3rs Year's and 2nd Years.",
+            "which batch is conducting the paryt pinky": "Our AI&ML 3rs Year's and 2nd Years.",
+            "who planned the party": "Our AI&ML 3rs Year's and 2nd Years.",
+            "who planned the party pinky": "Our AI&ML 3rs Year's and 2nd Years.",
+            "pinky who planned the party": "Our AI&ML 3rs Year's and 2nd Years.",
+            "who is responsible for the party arrangements": "Our AI&ML 3rs Year's and 2nd Years.",
+            "who is responsible for the party arrangements pinky": "Our AI&ML 3rs Year's and 2nd Years.",
+            "pinky who is responsible for the party arrangements": "Our AI&ML 3rs Year's and 2nd Years.",
+            "which batchs are conducting these party": "Our AI&ML 3rs Year's and 2nd Years.",
+            "which batchs are conducting these party pinky": "Our AI&ML 3rs Year's and 2nd Years.",
+            "pinky which batchs are conducting these party": "Our AI&ML 3rs Year's and 2nd Years.",
+            "when is party": "On The 27th Of January AIML Freshers Party.",
+            "when is party pinky": "On The 27th Of January AIML Freshers Party.",
+            "pinky when is party": "On The 27th Of January AIML Freshers Party.",
+            "when did freshers party": "On The 27th Of January AIML Freshers Party.",
+            "when did freshers party pinky": "On The 27th Of January AIML Freshers Party.",
+            "pinky when did freshers party": "On The 27th Of January AIML Freshers Party.",
+            "thanks pinky" : "Thanks Madam. I hope You will Must attend to this Party Thank.",
+            "ok pinky": "Ok Tahanks.",
+            "thanks" : "Welcome Madam I hope you Must attend to this Party.",
+            "what is my name" : "Yours Name is NAGA RANI. You are the HOD of CME. Thats Only I Know",
+            "what is my name pinky" : "Yours Name is NAGA RANI. You are the HOD of CME. Thats Only I Know",
+            "pinky what is my name" : "Yours Name is NAGA RANI. You are the HOD of CME. Thats Only I Know",
+            "can you please tell me location of the party": "Yes I will Tell. Location of the Party is Nuzvid Polytechnic College.",
+            "can you please tell me location of the party pinky": "Yes I will Tell. Location of the Party is Nuzvid Polytechnic College.",
+            "pinky can you please tell me location of the party": "Yes I will Tell. Location of the Party is Nuzvid Polytechnic College.",
+            "pinky what is the date of party": "27th of January 2025.",
+            "what is the date of party pinky": "27th of January 2025.",
+            "can you please tell the date of party": "27th of January 2025.",
+            "pinky can you please tell the date of party": "27th of January 2025.",
+            "can you please tell the date of party pinky": "27th of January 2025.",
+            "can you please tell me the time of party": "4PM.",
+            "yes i want": "Our AIML Depertment Conducting the 2024 Freshers Party on the 27th of January 2025. At the Nuzvid Polytechnic Collge. On the 27th Evening 4Pm The Party will Start. I hope you must attend to this party. Thanks.",
+            "yes pinky": "Our AIML Depertment Conducting the 2024 Freshers Party on the 27th of January 2025. At the Nuzvid Polytechnic Collge. On the 27th Evening 4Pm The Party will Start. I hope you must attend to this party. Thanks.",
+            "yes": "Our AIML Depertment Conducting the 2024 Freshers Party on the 27th of January 2025. At the Nuzvid Polytechnic Collge. On the 27th Evening 4Pm The Party will Start. I hope you must attend to this party. Thanks.",
+            "pinky can you please tell me the time of party": "4PM.",
+            "can you please tell me the time of party pinky": "4PM.",
+            "ok thanks": "Welcome Madam.",
+            "ok thanks pinky": "Welcome Madam.",
+            "pinky ok thanks": "Welcome Madam.",
+            "pinky thanks": "Welcome Madam.",
+            "thanks pinky": "Welcome Madam.",
+            "thanks pinky": "Welcome Madam. I hope you must attend to this Party. Thanks",
+            "hey pinky": "Yes Madam. Do you want any information about the AIML Freshers Party.",
+            "pinky": "Yes Madam. Do you want any information about the AIML Freshers Party.",
+            "i want to know about our college details": "Ok let me say What type of details Do you want from This list 1.Branches 2.College Faculty 3.Hostel details 4.Fee Structure 5.Contact Details 6.HODs List Please Note Ask which you want on the liist as the same pionts. Because I am developing Stage Thanks",
+            "branches": "1.AI&ML 2.Civil 3.CME 4.ECE 5.EEE 6.MECH Thanks!",
+            "college faculty": "There are so many faculty in our college. Do you want there list Please contact the College Admins Thanks",
+            "hostel details": "Our college offering Nice Hostel rooms for the Students. The Hostel fee in our college is very low as compare to the other all college hostels and our college provedings the Good Food forr Students Thanks For more details contact the Admin of Our College",
+            "about our college": "Ok let me say What type of details Do you want from This list 1.Branches 2.College Faculty 3.Hostel details 4.Fee Structure 5.Contact Details 6.HODs List Please Note Ask which you want on the liist as the same pionts. Because I am developing Stage Thanks",
+            "our college details": "Ok let me say What type of details Do you want from This List 1.Branches 2.College Faculty 3.Hostel details 4.Fee Structure 5.Contact Details 6.HODs List Please Note Ask which you want on the liist as the same pionts. Because I am developing Stage Thanks",
+            
+            "nice": "Thanks!",
+            "i want know about our college pinky": "Ok let me say What type of details Do you want from This list 1.Branches 2.College Faculty 3.Hostel details 4.Fee Structure 5.Contact Details 6.HODs List Please Note Ask which you want on the liist as the same pionts. Because I am developing Stage Thanks",
+            "i want to know about our college": "Ok let me say What type of details Do you want from This list 1.Branches 2.College Faculty 3.Hostel details 4.Fee Structure 5.Contact Details 6.HODs List Please Note Ask which you want on the liist as the same pionts. Because I am developing Stage Thanks",
+           
+            "hi good morning": "Yes Good Morning to you. How can I help you to Assistant about our AIML Party.",
+            "hai good morning": "Yes Good Morning to you. How can I help you to Assistant about our AIML Party",
+            "hai good afternoon": "Yes Good Afternoon to you. How can I help you to Assistant about our AIML Party",
+            "good morning": "Yes a Very Goood Morning To you. How can I Assistant to you about our AIML Party",
+            "good afternoon": "Yes a Very Goood AfterNoon To you. How can I Assistant to you about our AIML Party",
+            "good evening": "Yes a Very Goood Evening To you. How can I Assistant to you about our AIML Party",
+            "hi good afternoon": "Yes Good Afternoon to you. How can I help you to Assistant about our AIML Party",
+            "hai good evening": "Yes Good evening to you. How can I help you to Assistant about our AIML Party",
+            "hi good evening": "Yes Good Evening to you. How can I help you to Assistant about our AIML Party",
+            "who is the hod of aiml": "The HOD of AIML is PRADEEPTHA Madam",
+            "hod of aiml": "The HOD of AIML is PRADEEPTHA Madam",
+            "aiml hod": "PRADEEPTHA is the HOD AIML",
+            "who is the hod of civil": "The HOD of Civil is Phanindra Sir",
+            "hod of civil": "The HOD of Civil is Phanindra Sir",
+            "civil hod": "Suresh Sir is the HOD of Phanindra sir",
+            "who is the hod of cme": "The HOD of CME is Naga Rani Madam",
+            "hod of cme": "The HOD of CME is Naga Rani Madam",
+            "cme hod": "Naga Rani Madam is the HOD of CME",
+            "who is the hod of ece": "The HOD of ECE is Prasinthi Madam",
+            "hod of ece": "The HOD of ECE is Prasinthi Madam",
+            "ece hod": "Prasinthi Madam is the HOD of ECE",
+            "who is the hod of eee": "The HOD of EEE is Sudhakar Sir",
+            "hod of eee": "The HOD of EEE is Sudhakar Sir",
+            "eee hod": "Sudhakar Sir is the HOD of EEE",
+            "who is the hod of mech": "The HOD of MECH is Prakesh Sir",
+            "hod of mech": "The HOD of MECH is Prakesh Sir",
+            "mech hod": "Prakesh Sir is the HOD of MECH",
+            "how many branches in our college": "We are offering the 6 types of Branches in our College. Do you want list it Say Yes or No",
+            "how many department in our college": "We are offering the 6 types of department in our College. Do you want list it Say Yes or No",
+            "number of branches in our college": "We are offering the 6 types of Branches in our College. Do you want list it Say Yes or No",
+            "number of department in our college": "We are offering the 6 types of department in our College. Do you want list it Say Yes or No",
+            "which is the latest branch in our college": "The Latest Branch is AIML",
+            "how many cources are in our College": "We are offering the 6 types of Cources in our College. Do you want list it Say Yes or No",
+            "how many seats in aiml": "There are 66 Seats in AIML",
+            "how many seats in civil": "There are 132 Seats in Civil",
+            "how many seats in cme": "There are 132 Seats in CME",
+            "how many seats in ece": "There are 132 Seats in ECE",
+            "how many seats in eee": "There are 132 Seats in EEE",
+            "how many seats in mech": "There are 66 Seats in MECH",
+            "what is fee structure in our college": "The Fee structure of Our College is Toatally Based on the AP government Fee Remburshiment. There 15 Thousand is Extra to the 2024-2027 batch",
+            "who is the principal of our college ece and eee branches": "Our College principal is VEMAREDDY SRINIVASA RAJU for ECE & EEE.",
+            "who is the chairman of our college": "Our College Chair Man is NALLURI NAGA RAJESWARARAO",
+            "who is principal our colleg ece and eee branches": "VEMAREDDY SRINIVASA RAJU is the Principal of our College for ECE & EEE.",
+            "who is the principal of our college aiml and cme branches": "Our College principal is VAMSI SIR. For AIML & CME",
+            "who is the principal of our college civil and mech branches": "Our College principal is Ramesh Sir. For Civil & Mech.",
+            "who is chairman our college": "NALLURI NAGA RAJESWARARAO is the ChairMan of our College",
+            "principal of computers": "Principal of the computer is VAMSI SIR",
+            "principal of ece and eee": "Principal of the ECE And EEE is Srinivas Raju Sir",
+            "principal of eee and ece pinky": "Principal of the ECE And EEE is Srinivas Raju Sir",
+            "principal of aiml and cme": "Principal of the computer is VAMSI SIR",
+            "aiml and cme principal": "Principal of the computer is VAMSI SIR",
+            "ece and eee principal": "Principal of the ECE And EEE is Srinivas Raju Sir",
+            "who is the principal of aiml": "The Principal of AIML is Vamsi Sir",
+            "who is the principal of cme": "The Pincipal of CME is Vamsi Sir",
+            "who is the principal of ece": "The Pincipal of CME is Srinivas Raju Sir",
+            "who is the principal of eee": "The Pincipal of CME is Srinivas Raju Sir",
+            "who is the principal of civil": "The Pincipal of CME is Ramesh Sir",
+            "who is the principal of mech": "The Pincipal of CME is Ramesh Sir",
+            "who is the principal of our college": "There are Three Principals in our College. They are 1.Vamsi Sir 2.Ramesh Sir 3.Srinivas Sair",
+            "i want our college details": "Ok let me say What type of details Do you want from This List 1.Branches 2.College Faculty 3.Hostel details 4.Fee Structure 5.Contact Details 6.HODs List Please Note Ask which you want on the liist as the same pionts. Because I am developing Stage Thanks",
+            "civil and mech principal": "Principal of the Civil And Meech is Ramesh Sir",
+            "principal of cme and aiml": "Principal of the Computers DEPT is VAMSI SIR",
+            "principal of civil and mech": "Principal of the Civil And Meech is Ramesh Sir",
+            "yes": "1.AIML 2.Civil 3.CME 4.ECE 5.EEE 6.MECH",
+            "no": "Thanks",
+            "ok": "Thats Great! Thanks for Asking",
+            "ok thanks": "Thats Great! Thanks for Asking",
+            "location of our collage": "Our College is Excatly located at Euluru Distric in Nuzvid at the Venkatdripuram Village",
+            "what is the location of our collage": "Our College is Excatly located at Euluru Distric in Nuzvid at the Venkatdripuram Village",
+            "thanks": "You're welcome! It was my pleasure to assist you about our collage.",
+            "what is your name?": "I am Nuzvid Polytechnic Bot, your virtual assistant.",
+            "what is your name ?": "I am Nuzvid Polytechnic Bot, your virtual assistant.",
+            "whats your name": "I am Nuzvid Polytechnic Bot, your virtual assistant.",
+            "how is the day": "Nice Thanks for asking. Ok How can I assitiant about ouur College",
+            "what is the day today": "Thats great! Today is the Saturday 14th of September 2024.",
+            "what is the weather in our collge": "Its pretty Sunny in Our College",
+            "about weather in our college": "Thats Nice weather in our College Its Sunny",
+            "what is the location of our college": "Our College is Excatly located at Euluru Distric in Nuzvid at the Venkatdripuram Village",
+            "today weather in our college": "Thats Great weater in our College",
+            "weather in our college": "Toady weather is so Nice",
+            "what is event in our college today": "Thats Nice! Today a Event is Occering in our college Thta is related to Enginnerings Day",
+            "which celebration on our college today": "Today We are Celebrating the Enigineerings Day",
+            "which event is today in our college": "Today is engineerings day in Our college",
+            "which event in our college today": "Today is engineerings day in Our college",
+            "what is event today in our college": "Today is Enigineering Day in Our college",
+            "what is weather in our college": "Nice Its Sunny Today",
+            "what is our college name": "Our College Name is NUZVID POLYTECHNIC",
+            "whats our college name": "Our College Name is Nuzvid Polytechnic",
+            "who is the c language teacher": "Our C Language Teacher is Siril Sir",
+            "who is the chemistry teacher": "Our Chemistry Teacher is Rambabu Sir",
+            "who is the physics teacher": "Our Physics Teacher is Naveen Sir",
+            "who is the maths teacher": "Ok. Which year maths teacher 1st Year or 2nd Year",
+            "who is the bce teacher": "Our BCE Teacher is Spandana Mam",
+            "who is c language teacher": "Our C Language Teacher is Siril Sir",
+            "who is chemistry teacher": "Our Chemistry Teacher is Rambabu Sir",
+            "who is physics teacher": "Our Physics Teacher is Naveen Sir",
+            "1st year": "Our Maths Teacher is Murali Sir",
+            "2nd year": "Our Maths Teacher is D.Naga Raju (DNR) Sir",
+            "who is bce teacher": "Our BCE Teacher is Spandana Mam",
+            "c language teacher": "Our C Language Teacher is Siril Sir",
+            "chemistry teacher": "Our Chemistry Teacher is Rambabu Sir",
+            "physics teacher": "Our Physics Teacher is Naveen Sir",
+            "maths teacher": "Ok. Which year maths teacher 1st Year or 2nd Year",
+            "bce teacher": "Our BCE Teacher is Spandana Mam",
+            "who is the drawing teacher": "Our Drawing Teacher is Ravi sir",
+            "who is drawing teacher": "Our Drawing Teacher is Ravi sir",
+            "drawing teacher": "Our Drawing Teacher is Ravi sir",
+            "list the faculty of aiml": "1.Naga Rani Madam (HOD) 2.Spandana Mamdam 3.siril Sir 4.Pradeeptha Madam",
+            "faculty of aiml": "1.Naga Rani Madam (HOD) 2.Spandana Mamdam 3.siril Sir 4.Pradeeptha Madam",
+            "aiml faculty": "1.Naga Rani Madam (HOD) 2.Spandana Mamdam 3.siril Sir 4.Pradeeptha Madam",
+            "what is weather in our college today": "Thats Sunny Today in The Nuzvid Polytechnic",
+            "college location": "Our College is Excatly located at Euluru Distric in Nuzvid at the Venkatdripuram Village",
+            "good bye": "Goodbye! Have a great day!",
+
+
+   
+          
+
+        };
+
+        function sendMessage() {
+            // Get the user input and convert it to lowercase
+            let userInput = document.getElementById('userInput').value.toLowerCase().trim();
+
+            // Check if the input is empty
+            if (userInput === "") return;
+
+            // Add the message to the chat
+            addMessage(userInput, 'user');
+            document.getElementById('userInput').value = '';
+            // Process the message after a short delay
+            setTimeout(() => {
+                // Get the response based on the lowercase input
+                const response = responses[userInput] || "Sorry, I don't understand that question. I am in Developing stage Please ask the Correct Way of Questions-Thanks";
+                addMessage(response, 'bot');
+            }, 500); // Adjust the delay as needed
+        }
+
+
+        function addMessage(text, sender) {
+            const message = document.createElement('div');
+            message.classList.add('message', sender);
+            message.textContent = text;
+            document.getElementById('chatBody').appendChild(message);
+            message.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+
+</html>
